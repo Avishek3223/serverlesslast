@@ -37,7 +37,7 @@ provider:
 
 functions:
   # Defines an HTTP API endpoint that calls the main function in create.js
-  # - path: URL path is /notes
+  # - path: url path is /notes
   # - method: POST request
   # - authorizer: authenticate using the AWS IAM role
   create:
@@ -46,10 +46,11 @@ functions:
       - http:
           path: notes
           method: post
+          cors: true
           authorizer: aws_iam
 
   # Defines an HTTP API endpoint that calls the main function in get.js
-  # - path: URL path is /notes/{id}
+  # - path: url path is /notes/{id}
   # - method: GET request
   get:
     handler: get.main
@@ -57,10 +58,11 @@ functions:
       - http:
           path: notes/{id}
           method: get
+          cors: true
           authorizer: aws_iam
 
   # Defines an HTTP API endpoint that calls the main function in list.js
-  # - path: URL path is /notes
+  # - path: url path is /notes
   # - method: GET request
   list:
     handler: list.main
@@ -68,10 +70,11 @@ functions:
       - http:
           path: notes
           method: get
+          cors: true
           authorizer: aws_iam
 
   # Defines an HTTP API endpoint that calls the main function in update.js
-  # - path: URL path is /notes/{id}
+  # - path: url path is /notes/{id}
   # - method: PUT request
   update:
     handler: update.main
@@ -79,10 +82,11 @@ functions:
       - http:
           path: notes/{id}
           method: put
+          cors: true
           authorizer: aws_iam
 
   # Defines an HTTP API endpoint that calls the main function in delete.js
-  # - path: URL path is /notes/{id}
+  # - path: url path is /notes/{id}
   # - method: DELETE request
   delete:
     handler: delete.main
@@ -90,4 +94,10 @@ functions:
       - http:
           path: notes/{id}
           method: delete
+          cors: true
           authorizer: aws_iam
+
+resources:
+# API Gateway Errors
+- ${file(resources/api-gateway-errors.yml)}
+
