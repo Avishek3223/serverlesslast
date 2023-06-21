@@ -8,38 +8,34 @@ plugins:
   - serverless-offline
   - serverless-dotenv-plugin # Load .env as environment variables
 
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  sstApp: ${self:custom.stage}-notes-infra
+
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: us-east-1
 
-  # These environment variables are made available to our functions
-  # under process.env.
   environment:
-    tableName: notes
+    stripeSecretKey: ${env:STRIPE_SECRET_KEY}
+    tableName: !ImportValue '${self:custom.sstApp}-TableName'
 
-  # 'iam' section defines the permission policy for the Lambda function.
-  # In this case, Lambda functions are granted permissions to access DynamoDB.
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - dynamodb:Scan
-            - dynamodb:Query
-            - dynamodb:GetItem
-            - dynamodb:PutItem
-            - dynamodb:UpdateItem
-            - dynamodb:DeleteItem
-            - dynamodb:DescribeTable
-          Resource: "arn:aws:dynamodb:us-east-1:*:*"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - dynamodb:Query
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource:
+        - !ImportValue '${self:custom.sstApp}-TableArn'
 
 functions:
-  # Defines an HTTP API endpoint that calls the main function in create.js
-  # - path: url path is /notes
-  # - method: POST request
-  # - authorizer: authenticate using the AWS IAM role
   create:
     handler: create.main
     events:
@@ -49,9 +45,6 @@ functions:
           cors: true
           authorizer: aws_iam
 
-  # Defines an HTTP API endpoint that calls the main function in get.js
-  # - path: url path is /notes/{id}
-  # - method: GET request
   get:
     handler: get.main
     events:
@@ -61,9 +54,6 @@ functions:
           cors: true
           authorizer: aws_iam
 
-  # Defines an HTTP API endpoint that calls the main function in list.js
-  # - path: url path is /notes
-  # - method: GET request
   list:
     handler: list.main
     events:
@@ -73,9 +63,6 @@ functions:
           cors: true
           authorizer: aws_iam
 
-  # Defines an HTTP API endpoint that calls the main function in update.js
-  # - path: url path is /notes/{id}
-  # - method: PUT request
   update:
     handler: update.main
     events:
@@ -85,9 +72,6 @@ functions:
           cors: true
           authorizer: aws_iam
 
-  # Defines an HTTP API endpoint that calls the main function in delete.js
-  # - path: url path is /notes/{id}
-  # - method: DELETE request
   delete:
     handler: delete.main
     events:
@@ -98,6 +82,11 @@ functions:
           authorizer: aws_iam
 
 resources:
-# API Gateway Errors
-- ${file(resources/api-gateway-errors.yml)}
+  # API Gateway Errors
+  - ${file(resources/api-gateway-errors.yml)}
+
+  # Cognito Identity Pool Policy
+  - ${file(resources/cognito-policy.yml)}
+
+
 
