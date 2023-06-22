@@ -19,21 +19,22 @@ provider:
   region: us-east-1
 
   environment:
-    stripeSecretKey: ${env:STRIPE_SECRET_KEY}
     tableName: !ImportValue '${self:custom.sstApp}-TableName'
 
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:Scan
-        - dynamodb:Query
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-        - dynamodb:DescribeTable
-      Resource:
-        - !ImportValue '${self:custom.sstApp}-TableArn'
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:DescribeTable
+          Resource:
+            - !ImportValue '${self:custom.sstApp}-TableArn'
 
 functions:
   create:
@@ -80,13 +81,3 @@ functions:
           method: delete
           cors: true
           authorizer: aws_iam
-
-resources:
-  # API Gateway Errors
-  - ${file(resources/api-gateway-errors.yml)}
-
-  # Cognito Identity Pool Policy
-  - ${file(resources/cognito-policy.yml)}
-
-
-
