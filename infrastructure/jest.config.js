@@ -1,8 +1,13 @@
-// jest.config.js
 module.exports = {
-    transform: {
-      '^.+\\.js$': 'babel-jest'
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
     },
-    // ... other Jest configuration options
-  };
-  
+  },
+};

@@ -1,17 +1,15 @@
-// DynamoDBStack.test.js
-import "@babel/register";
-import { expect, haveResource } from "@aws-cdk/assert";
-import { App } from "@serverless-stack/resources";
-import DynamoDBStack from "../lib/DynamoDBStack";
+import { expect } from 'aws-cdk-lib';
+import sst from '@serverless-stack/resources';
+import DynamoDBStack from '../lib/DynamoDBStack.js';
 
-test("Test Stack", () => {
-  const app = new App();
-  // WHEN
-  const stack = new DynamoDBStack(app, "test-stack");
-  // THEN
-  expect(stack).to(
-    haveResource("AWS::DynamoDB::Table", {
-      BillingMode: "PAY_PER_REQUEST",
-    })
-  );
+describe('DynamoDBStack', () => {
+  it('should have expected properties', () => {
+    const app = new sst.App();
+    const stack = new DynamoDBStack(app, 'test-stack');
+
+    // Add assertions here to test the properties of the DynamoDBStack instance
+    // For example:
+    expect(stack.table).to.exist;
+    expect(stack.table.billingMode).to.equal('PAY_PER_REQUEST');
+  });
 });

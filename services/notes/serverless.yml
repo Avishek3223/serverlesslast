@@ -19,6 +19,7 @@ provider:
   region: us-east-1
 
   environment:
+    stripeSecretKey: sk_test_51NH2tdSAC2hJa9B0NvVqNFGzCElzodNMkElGM1IjP84oBf7vKQalcu7c8De0SwwQIRwhLClbnhrGPU0GTAlcUCpp00woqW8w3H 
     tableName: !ImportValue '${self:custom.sstApp}-TableName'
 
   iam:
