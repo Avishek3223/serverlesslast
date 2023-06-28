@@ -51,8 +51,10 @@ functions:
 
   get:
     handler: get.main
+    timeout: 10
+    memorySize: 128
     events:
-      - http:
+     - http:
           path: notes/{id}
           method: get
           cors: true
