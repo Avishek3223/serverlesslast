@@ -1,4 +1,4 @@
-frameworkVersion: ">=1.0.0 <2.0.0"
+frameworkVersion: "3.32.2"
 
 service: notes-api
 
